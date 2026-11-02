@@ -3,480 +3,302 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff0f5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>💕 ふたりのホンネ</title>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;padding:18px;min-height:100dvh;
- display:grid;place-items:center;
- background:linear-gradient(145deg,#fff0f5,#ffe5ec);
- font-family:-apple-system,BlinkMacSystemFont,sans-serif;
- color:#49343d
+* {
+  box-sizing: border-box;
 }
-main{
- width:100%;max-width:430px;
- background:#fff;border-radius:26px;
- padding:28px 22px;text-align:center;
- box-shadow:0 12px 35px #cf739333
+
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #fff0f5, #ffe1eb);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", sans-serif;
+  color: #49343d;
 }
-h1{color:#db6085;font-size:27px;margin:8px 0}
-h2{font-size:21px;overflow-wrap:anywhere}
-p{line-height:1.7}
-textarea{
- width:100%;height:110px;resize:vertical;
- padding:15px;margin:8px 0;
- border:1px solid #e9c6d1;border-radius:14px;
- font:inherit;font-size:16px
+
+main {
+  width: 100%;
+  max-width: 430px;
+  padding: 32px 24px;
+  background: white;
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 14px 38px #cf739333;
 }
-button{
- border:0;border-radius:14px;
- padding:15px;font-size:16px;
- font-weight:bold;cursor:pointer
+
+.logo {
+  font-size: 48px;
+  margin-bottom: 10px;
 }
-button:disabled{opacity:.5}
-.primary{
- width:100%;margin:9px 0;
- background:#e66b91;color:white
+
+h1 {
+  margin: 8px 0;
+  font-size: 28px;
+  color: #db6085;
 }
-.secondary{background:#ffe0ea;color:#a83d60}
-.choices{display:flex;gap:12px}
-.choices button{flex:1}
-.hidden{display:none!important}
-.muted{color:#947d86;font-size:13px}
-.status{font-size:14px;color:#99627a}
-.answers{display:flex;gap:10px;margin:20px 0}
-.answers>div{
- flex:1;padding:18px 5px;
- border-radius:15px;background:#fff0f5;
- font-size:20px;font-weight:bold
+
+.subtitle {
+  color: #866b76;
+  line-height: 1.8;
 }
-.answers small{font-size:13px;color:#947d86}
-#error{color:#ba244d;overflow-wrap:anywhere}
-.invite-area{
- margin:16px 0 22px;padding:14px 12px;
- border:1px solid #f5d3df;border-radius:18px;
- background:#fff7fa
+
+button {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
-.invite-note{
- font-size:12px;color:#947d86;margin:4px 0
+
+.google {
+  margin-top: 22px;
+  background: #fff;
+  border: 1px solid #dedede;
+  color: #333;
+  box-shadow: 0 3px 9px #00000010;
+}
+
+.google:disabled {
+  opacity: 0.5;
+}
+
+.logout {
+  margin-top: 20px;
+  background: #ffe1eb;
+  color: #a83d60;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.profile {
+  margin: 20px 0;
+  padding: 18px;
+  background: #fff5f8;
+  border-radius: 18px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f4d9e2;
+}
+
+.name {
+  margin: 12px 0 4px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.email {
+  font-size: 13px;
+  color: #907b84;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #947d86;
+}
+
+#error {
+  margin-top: 12px;
+  color: #b82e54;
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 </style>
 </head>
+
 <body>
 <main>
-<h1>💕 ふたりのホンネ</h1>
-<p>ふたりの気持ちを、YES・NOで。</p>
 
-<p id="status" class="status">接続しています…</p>
-<p id="error" role="alert"></p>
+  <div class="logo">💕</div>
 
-<section id="appScreen" class="hidden">
- <div class="invite-area">
-  <button id="share" class="primary">
-   💕 リンクを送る ♡
-  </button>
-  <p class="invite-note">
-   相手にアプリのリンクを送れるよ ♡
+  <h1>ふたりのホンネ</h1>
+
+  <p class="subtitle">
+    ふたりの気持ちを、YES・NOで。<br>
+    ふたりだけの小さな質問アプリ ♡
   </p>
- </div>
 
- <p id="members" class="muted"></p>
+  <section id="loginScreen" class="hidden">
+    <button id="googleLogin" class="google">
+      Googleでログイン ♡
+    </button>
+  </section>
 
- <section id="editor" class="hidden">
-  <textarea id="questionInput"
-   placeholder="ふたりに聞きたい質問を入力してね"
-   maxlength="200"></textarea>
-  <button id="ask" class="primary">
-   質問する ♡
-  </button>
- </section>
+  <section id="userScreen" class="hidden">
+    <div class="profile">
+      <img id="avatar" class="avatar"
+           alt="プロフィール画像">
+      <div id="displayName" class="name"></div>
+      <div id="email" class="email"></div>
+    </div>
 
- <section id="vote" class="hidden">
-  <h2 id="voteQuestion"></h2>
-  <p>あなたの答えは？</p>
-  <div class="choices">
-   <button id="yes" class="secondary">♡ YES</button>
-   <button id="no" class="secondary">NO</button>
-  </div>
- </section>
+    <p>
+      Googleログイン成功！ ♡
+    </p>
 
- <section id="waiting" class="hidden">
-  <h2 id="waitingQuestion"></h2>
-  <p>回答したよ ♡</p>
-  <p>相手の回答を待っています…</p>
- </section>
+    <p class="subtitle">
+      次は、ふたり専用の質問画面を作るよ。
+    </p>
 
- <section id="result" class="hidden">
-  <h2 id="resultQuestion"></h2>
-  <p>ふたりの回答 ♡</p>
-  <div class="answers">
-   <div>
-    <small>あなた</small>
-    <p id="mine"></p>
-   </div>
-   <div>
-    <small>相手</small>
-    <p id="theirs"></p>
-   </div>
-  </div>
-  <button id="next" class="primary">
-   次の質問へ ♡
-  </button>
- </section>
-</section>
+    <button id="logout" class="logout">
+      ログアウト
+    </button>
+  </section>
 
-<p class="muted">
- 質問と回答は次の質問で消去されます。<br>
- 同じ2人で使い続けるための試作版です。
-</p>
+  <p id="status" class="status">
+    ログイン状態を確認しています…
+  </p>
+
+  <p id="error" role="alert"></p>
+
 </main>
 
 <script type="module">
-import {initializeApp} from
- 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 
 import {
- getAuth,signInAnonymously,onAuthStateChanged
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut
 } from
- 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+"https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-import {
- getFirestore,doc,getDoc,setDoc,onSnapshot,
- runTransaction,serverTimestamp
-} from
- 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
-
-const firebaseConfig={
- apiKey:"AIzaSyBpGIfu3jOksMS8_jPAUPXHuh4GzgwyUq8",
- authDomain:"futari-no-honne.firebaseapp.com",
- projectId:"futari-no-honne",
- storageBucket:"futari-no-honne.firebasestorage.app",
- messagingSenderId:"512221931738",
- appId:"1:512221931738:web:e69b8fd62b46c6eaa69de3"
+const firebaseConfig = {
+  apiKey: "AIzaSyBpGIfu3jOksMS8_jPAUPXHuh4GzgwyUq8",
+  authDomain: "futari-no-honne.firebaseapp.com",
+  projectId: "futari-no-honne",
+  storageBucket: "futari-no-honne.firebasestorage.app",
+  messagingSenderId: "512221931738",
+  appId: "1:512221931738:web:e69b8fd62b46c6eaa69de3"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
+const app = initializeApp(firebaseConfig);
 
-// Firestoreルールで追加した固定データ
-const coupleRef=doc(db,'couples','main');
+const auth = getAuth(app);
 
-const $=id=>document.getElementById(id);
-const show=(id,visible)=>
- $(id).classList.toggle('hidden',!!visible===false);
+const provider = new GoogleAuthProvider();
 
-let uid=null;
-let couple=null;
-let unsubscribe=null;
-let initializing=false;
-let authStarted=false;
-let actionBusy=false;
+provider.setCustomParameters({
+  prompt: "select_account"
+});
 
-function setStatus(message){
- $('status').textContent=message;
+const $ = id => document.getElementById(id);
+
+function show(id, visible) {
+  $(id).classList.toggle("hidden", !visible);
 }
 
-function clearError(){
- $('error').textContent='';
+function setStatus(message) {
+  $("status").textContent = message;
 }
 
-function showError(error){
- console.error(error);
- $('error').textContent=
-  error.code==='permission-denied'
-   ? 'アクセスが拒否されました。2人の登録状態とFirestoreルールを確認してね。'
-   : error.message||String(error);
+function showError(error) {
+  console.error(error);
+
+  const messages = {
+    "auth/popup-blocked":
+      "ログイン画面がブロックされました。Safariで開いてね。",
+    "auth/popup-closed-by-user":
+      "ログインがキャンセルされました。",
+    "auth/unauthorized-domain":
+      "GitHub PagesのドメインをFirebaseに登録してね。",
+    "auth/operation-not-allowed":
+      "FirebaseでGoogleログインを有効にしてね。",
+    "auth/network-request-failed":
+      "通信エラーです。ネット接続を確認してね。"
+  };
+
+  $("error").textContent =
+    messages[error.code] ||
+    error.message ||
+    "ログインでエラーが発生しました。";
 }
 
-function setActionBusy(value){
- actionBusy=value;
- for(const id of ['ask','yes','no','next']){
-  $(id).disabled=value;
- }
-}
+function renderUser(user) {
+  const loggedIn = !!user;
 
-function render(){
- if(!couple||!uid)return;
+  show("loginScreen", !loggedIn);
+  show("userScreen", loggedIn);
 
- const members=couple.members||[];
- const answers=couple.answers||{};
- const question=couple.question||'';
- const isMember=members.includes(uid);
-
- show('appScreen',true);
-
- $('members').textContent=
-  members.length===1
-   ? '相手の参加を待っています… ♡'
-   : 'ふたりが接続中 ♡';
-
- if(!isMember){
-  show('editor',false);
-  show('vote',false);
-  show('waiting',false);
-  show('result',false);
-  setStatus('このペアは登録済みです');
-  return;
- }
-
- const myAnswer=answers[uid];
- const otherUid=members.find(id=>id!==uid);
- const otherAnswer=answers[otherUid];
- const bothAnswered=!!myAnswer&&!!otherAnswer;
-
- show('editor',members.length===2&&!question);
- show('vote',members.length===2&&!!question&&!myAnswer);
- show('waiting',!!question&&!!myAnswer&&!bothAnswered);
- show('result',!!question&&bothAnswered);
-
- if(question){
-  $('voteQuestion').textContent=question;
-  $('waitingQuestion').textContent=question;
-  $('resultQuestion').textContent=question;
- }
-
- if(bothAnswered){
-  $('mine').textContent=myAnswer;
-  $('theirs').textContent=otherAnswer;
- }
-}
-
-async function initializeCouple(){
- if(initializing||!uid)return;
- initializing=true;
- clearError();
- setStatus('ふたりのデータを確認しています…');
-
- try{
-  const snapshot=await getDoc(coupleRef);
-
-  if(!snapshot.exists()){
-   // 同時アクセス時は先に作成した側を優先
-   try{
-    await runTransaction(db,async tx=>{
-     const current=await tx.get(coupleRef);
-     if(!current.exists()){
-      tx.set(coupleRef,{
-       members:[uid],
-       question:'',
-       answers:{},
-       createdAt:serverTimestamp()
-      });
-     }
-    });
-   }catch(error){
-    // 競合で作成済みなら再取得で確認する
-    const retry=await getDoc(coupleRef);
-    if(!retry.exists())throw error;
-   }
+  if (!loggedIn) {
+    setStatus("Googleアカウントでログインしてね ♡");
+    return;
   }
 
-  // 最初の2人だけ登録
-  await runTransaction(db,async tx=>{
-   const current=await tx.get(coupleRef);
+  $("displayName").textContent =
+    user.displayName || "ユーザー";
 
-   if(!current.exists()){
-    throw Error('ペアデータが見つかりません');
-   }
+  $("email").textContent =
+    user.email || "";
 
-   const members=current.data().members;
+  const avatar = $("avatar");
 
-   if(!Array.isArray(members)){
-    throw Error('ペアデータが不正です');
-   }
-
-   if(!members.includes(uid)){
-    if(members.length>=2){
-     throw Error(
-      'このアプリにはすでに2人が登録されています。'
-     );
-    }
-    tx.update(coupleRef,{
-     members:[...members,uid]
-    });
-   }
-  });
-
-  if(unsubscribe)unsubscribe();
-
-  unsubscribe=onSnapshot(coupleRef,snapshot=>{
-   if(!snapshot.exists()){
-    showError(Error('ペアデータがありません'));
-    return;
-   }
-
-   couple=snapshot.data();
-
-   if(!couple.members.includes(uid)){
-    show('appScreen',false);
-    showError(Error('このペアには参加できません'));
-    return;
-   }
-
-   setStatus('接続中 ♡');
-   render();
-  },showError);
-
- }catch(error){
-  showError(error);
-  setStatus('接続できませんでした');
- }finally{
-  initializing=false;
- }
-}
-
-async function askQuestion(){
- if(actionBusy||!uid)return;
-
- const question=$('questionInput').value.trim();
- if(!question){
-  showError(Error('質問を入力してね'));
-  return;
- }
-
- clearError();
- setActionBusy(true);
-
- try{
-  await runTransaction(db,async tx=>{
-   const snapshot=await tx.get(coupleRef);
-   const data=snapshot.data();
-
-   if(!data||
-      !data.members.includes(uid)||
-      data.members.length!==2||
-      data.question){
-    throw Error('今は質問を開始できません');
-   }
-
-   tx.update(coupleRef,{
-    question,
-    answers:{}
-   });
-  });
-  $('questionInput').value='';
- }catch(error){
-  showError(error);
- }finally{
-  setActionBusy(false);
- }
-}
-
-async function answer(value){
- if(actionBusy||!uid)return;
-
- clearError();
- setActionBusy(true);
-
- try{
-  await runTransaction(db,async tx=>{
-   const snapshot=await tx.get(coupleRef);
-   const data=snapshot.data();
-
-   if(!data||
-      !data.members.includes(uid)||
-      data.members.length!==2||
-      !data.question){
-    throw Error('回答できる質問がありません');
-   }
-
-   if(data.answers[uid])return;
-
-   tx.update(coupleRef,{
-    answers:{
-     ...data.answers,
-     [uid]:value
-    }
-   });
-  });
- }catch(error){
-  showError(error);
- }finally{
-  setActionBusy(false);
- }
-}
-
-async function nextQuestion(){
- if(actionBusy||!uid)return;
-
- clearError();
- setActionBusy(true);
-
- try{
-  await runTransaction(db,async tx=>{
-   const snapshot=await tx.get(coupleRef);
-   const data=snapshot.data();
-
-   if(!data||
-      !data.members.includes(uid)||
-      Object.keys(data.answers).length!==2){
-    throw Error('まだ2人の回答がそろっていません');
-   }
-
-   tx.update(coupleRef,{
-    question:'',
-    answers:{}
-   });
-  });
- }catch(error){
-  showError(error);
- }finally{
-  setActionBusy(false);
- }
-}
-
-async function shareInvite(){
- const url=new URL(location.href);
- url.search='';
- url.hash='';
- const inviteUrl=url.toString();
-
- try{
-  if(navigator.share){
-   await navigator.share({
-    title:'💕 ふたりのホンネ',
-    text:'ふたりの気持ちを、YES・NOで。一緒に答えよう ♡',
-    url:inviteUrl
-   });
-  }else if(navigator.clipboard){
-   await navigator.clipboard.writeText(inviteUrl);
-   alert('リンクをコピーしたよ ♡');
-  }else{
-   prompt('このリンクをコピーしてね ♡',inviteUrl);
+  if (user.photoURL) {
+    avatar.src = user.photoURL;
+    avatar.style.display = "inline-block";
+  } else {
+    avatar.removeAttribute("src");
+    avatar.style.display = "none";
   }
- }catch(error){
-  if(error.name!=='AbortError')showError(error);
- }
+
+  setStatus("ログイン中 ♡");
 }
 
-$('ask').onclick=askQuestion;
-$('yes').onclick=()=>answer('YES');
-$('no').onclick=()=>answer('NO');
-$('next').onclick=nextQuestion;
-$('share').onclick=shareInvite;
+$("googleLogin").addEventListener("click", async () => {
+  $("error").textContent = "";
+  $("googleLogin").disabled = true;
+  setStatus("Googleログインを開始しています…");
 
-onAuthStateChanged(auth,async user=>{
- if(!user){
-  uid=null;
-  if(!authStarted){
-   authStarted=true;
-   try{
-    await signInAnonymously(auth);
-   }catch(error){
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
     showError(error);
-    setStatus('認証に失敗しました');
-   }
+    setStatus("ログインできませんでした");
+  } finally {
+    $("googleLogin").disabled = false;
   }
-  return;
- }
+});
 
- uid=user.uid;
- authStarted=true;
- await initializeCouple();
-},showError);
+$("logout").addEventListener("click", async () => {
+  $("error").textContent = "";
+
+  try {
+    await signOut(auth);
+  } catch (error) {
+    showError(error);
+  }
+});
+
+onAuthStateChanged(
+  auth,
+  user => renderUser(user),
+  error => showError(error)
+);
+
 </script>
 </body>
 </html>
